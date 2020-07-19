@@ -28,18 +28,22 @@ public class PictureController {
 
     @PostMapping("/save")
     public String savePicture(Picture picture, RedirectAttributes redirectAttributes){
-        pictureService.save(picture);
-        redirectAttributes.addFlashAttribute("success","Add comment successfully!");
-        return "redirect:/pictures";
+        try {
+            pictureService.save(picture);
+            redirectAttributes.addFlashAttribute("success","Add comment successfully!");
+            return "redirect:/pictures";
+        }catch (Exception e){
+            return "error-404";
+        }
     }
 
     @GetMapping("/like/{id}")
-    public String likePicture(@PathVariable Long id){
+    public String likePicture(@PathVariable Long id) throws Exception {
         Picture picture = pictureService.findById(id);
-        if (picture!= null){
+        try {
             pictureService.save(setLikePicture(picture));
             return "redirect:/pictures";
-        }else {
+        }catch (Exception e){
             return "error-404";
         }
     }

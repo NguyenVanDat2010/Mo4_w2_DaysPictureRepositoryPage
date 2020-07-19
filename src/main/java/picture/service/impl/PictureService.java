@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import picture.model.Picture;
 import picture.repository.IPictureRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PictureService implements IPictureService {
@@ -14,6 +17,14 @@ public class PictureService implements IPictureService {
 
     @Override
     public Iterable<Picture> findAll() {
+//        PictureService pictureService = new PictureService();
+//        List<Picture> pictures = new ArrayList<>();
+//        for (Picture picture:pictureRepository.findAll()){
+//            if (pictureService.checkFeedback(picture.getFeedback())){
+//                pictures.add(picture);
+//            }
+//        }
+//        return pictures;
         return pictureRepository.findAll();
     }
 
@@ -23,8 +34,13 @@ public class PictureService implements IPictureService {
     }
 
     @Override
-    public void save(Picture model) {
-        pictureRepository.save(model);
+    public void save(Picture model) throws Exception {
+        PictureService pictureService = new PictureService();
+        if (pictureService.checkFeedback(model.getFeedback())){
+            pictureRepository.save(model);
+        }else {
+            throw new Exception("Can't add this feedback: "+model.getAuthor()+", "+model.getFeedback()+", "+ LocalDateTime.now());
+        }
     }
 
     @Override
@@ -37,8 +53,14 @@ public class PictureService implements IPictureService {
         return pictureRepository.findAll(pageable);
     }
 
-    //    @Override
-//    public void updateLike(Long id) {
-//        pictureRepository.updateLike(id);
-//    }
+    public boolean checkFeedback(String feedback){
+        ArrayList<String> myString = null;
+        String[] myString2={"fuck","damned","Uppy","dirty pig","Fuck you","ass","cunt","porn"};
+        for (String str:myString2){
+            if (feedback.contains(str)){
+                return false;
+            }
+        }
+        return true;
+    }
 }

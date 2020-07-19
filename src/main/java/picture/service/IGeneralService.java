@@ -5,7 +5,7 @@ public interface IGeneralService<T> {
 
     T findById(Long id);
 
-    void save(T model);
+    void save(T model) throws Exception;
 
     void remove(Long id);
 }
